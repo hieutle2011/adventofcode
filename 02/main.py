@@ -1,36 +1,48 @@
 def parseInputFile(path):
     file = open(path)
     for line in file:
-        return line.split(',')
+        return [int(i) for i in line.split(',')]
 
 
 def getOpCodeIndex(array_length):
     return [int(i) for i in range(0, array_length, 4)]
 
 
-def main():
-    PLUS_CODE = 1
-    MULTIPLY_CODE = 2
-    HALT_CODE = 99
-    program_codes = parseInputFile('./input.txt')
-    opCodeIndexes = getOpCodeIndex(len(program_codes))
-    # print(opCodeIndexes)
-    for index in opCodeIndexes:
-        opCode = int(program_codes[index])
+def handleOperation(opCode, opCodeIndex, progCodes):
+    indexA = opCodeIndex+1
+    indexB = opCodeIndex+2
+    indexResult = opCodeIndex+3
+    ptrA = progCodes[indexA]
+    ptrB = progCodes[indexB]
+    ptrResult = progCodes[indexResult]
+    a = progCodes[ptrA]
+    b = progCodes[ptrB]
+    if opCode == PLUS_CODE:
+        progCodes[ptrResult] = a + b
+    elif opCode == MULTIPLY_CODE:
+        progCodes[ptrResult] = a * b
+    return progCodes
+     
 
+PLUS_CODE = 1
+MULTIPLY_CODE = 2
+HALT_CODE = 99
+
+
+def main():
+    program_codes = parseInputFile('./input.txt')
+    # restore the gravity assist program
+    program_codes[1] = 12
+    program_codes[2] = 2
+
+    opCodeIndexes = getOpCodeIndex(len(program_codes))
+    for index in opCodeIndexes:
+        opCode = program_codes[index]
         if opCode == HALT_CODE:
-            print('HALT_CODE')
             break
-        elif opCode == PLUS_CODE:
-            print('PLUS_CODE')
-            # TODO handle plus
-            pass
-        elif opCode == MULTIPLY_CODE:
-            print('MULTIPLY_CODE')
-            # TODO handle multiply
-            pass
+        elif opCode == PLUS_CODE or opCode == MULTIPLY_CODE:
+            program_codes = handleOperation(opCode, index, program_codes)
         else:
-            print('Something went wrong!')
             pass
 
     print(program_codes[0])
