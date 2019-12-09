@@ -1,3 +1,7 @@
+import os
+import copy
+
+
 def parseInputFile(path):
     file = open(path)
     for line in file:
@@ -22,7 +26,7 @@ def handleOperation(opCode, opCodeIndex, progCodes):
     elif opCode == MULTIPLY_CODE:
         progCodes[ptrResult] = a * b
     return progCodes
-     
+
 
 PLUS_CODE = 1
 MULTIPLY_CODE = 2
@@ -30,22 +34,34 @@ HALT_CODE = 99
 
 
 def main():
-    program_codes = parseInputFile('./input.txt')
-    # restore the gravity assist program
-    program_codes[1] = 12
-    program_codes[2] = 2
+    path = os.getcwd() + '/input.txt'
+    program_codes = parseInputFile(path)
+    EXPECT = 19690720
 
-    opCodeIndexes = getOpCodeIndex(len(program_codes))
-    for index in opCodeIndexes:
-        opCode = program_codes[index]
-        if opCode == HALT_CODE:
-            break
-        elif opCode == PLUS_CODE or opCode == MULTIPLY_CODE:
-            program_codes = handleOperation(opCode, index, program_codes)
-        else:
-            pass
+    for noun in range(0, 100):
+        for verb in range(0, 100):
+            # reload program codes into memory
+            memory = copy.deepcopy(program_codes)
 
-    print(program_codes[0])
+            # restore the gravity assist program
+            memory[1] = noun
+            memory[2] = verb
+
+            opCodeIndexes = getOpCodeIndex(len(memory))
+            for index in opCodeIndexes:
+                opCode = memory[index]
+                if opCode == HALT_CODE:
+                    break
+                elif opCode == PLUS_CODE or opCode == MULTIPLY_CODE:
+                    memory = handleOperation(opCode, index, memory)
+                else:
+                    pass
+
+            if memory[0] == EXPECT:
+                print(noun, verb)
+                print(memory[0])
+                break
+
 
 if __name__ == "__main__":
     main()
