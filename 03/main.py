@@ -69,7 +69,7 @@ class Line:
         self.max_x = max_x
         self.max_y = max_y
 
-    def cut_with(self, line):
+    def intersected_by(self, line):
         xP = None
         yP = None
 
@@ -116,20 +116,20 @@ def main():
 
     for line_0 in lines[0]:
         for line_1 in lines[1]:
-            p = line_0.cut_with(line_1)
-            if p.isExist():
-                valid_points.append(p)
+            intersection = line_0.intersected_by(line_1)
+            if intersection.isExist():
+                valid_points.append(intersection)
 
-    print('Number of cut points: {}'.format(len(valid_points)))
+    print('Number of cut points: {}'.format(len(valid_points))) # expect 49
 
     min_distance = 1000000 # abitrary big number
     for p in valid_points:
         distance = p.get_manhatan_distance_from_central()
+        print('====distance {}, x {}, y {}'.format(distance, p.x, p.y))
         if distance != 0 and distance < min_distance:
-            # print('====distance {}, x {}, y {}'.format(distance, p.x, p.y))
             min_distance = distance
     
-    print('Distance to closet point: {}'.format(min_distance))
+    print('Distance to closest point: {}'.format(min_distance)) # expect 860
 
 
 if __name__ == "__main__":

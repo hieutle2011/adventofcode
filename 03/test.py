@@ -68,13 +68,13 @@ class TestLineMethods(unittest.TestCase):
     def test_un_cut_lines(self):
         hor = Line(Point(3,5), Point(8,5))
         ver = Line(Point(10,3), Point(10,10))
-        cut_point = hor.cut_with(ver)
+        cut_point = hor.intersected_by(ver)
         self.assertEqual(cut_point.isExist(), False)
 
     def test_cut_lines(self):
         hor = Line(Point(3,5), Point(8,5))
         ver = Line(Point(6,3), Point(6,10))
-        cut_point = hor.cut_with(ver)
+        cut_point = hor.intersected_by(ver)
         self.assertEqual(cut_point.isExist(), True)
         self.assertEqual(cut_point.x, 6)
         self.assertEqual(cut_point.y, 5)
