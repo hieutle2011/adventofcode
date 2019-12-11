@@ -2,6 +2,13 @@ import os
 import copy
 
 
+def in_range(x, a, b):
+    if (x >= a and x <= b) or (x >= b and x <= a):
+        return True
+    else:
+        return False
+
+
 class Point:
     def __init__(self, x_ord, y_ord):
         self.x = x_ord
@@ -33,6 +40,34 @@ class Point:
         elif code == 'D':
             y -= step
         return Point(self.x + x, self.y + y)
+
+    def isBetween(self, pointA, pointB):
+        isHorizontalBetween = (self.y == pointA.y and self.y == pointB.y) and in_range(
+            self.x, pointA.x, pointB.x)
+        isVerticalBetween = (self.x == pointA.x and self.x == pointB.x) and in_range(
+            self.y, pointA.y, pointB.y)
+        if (isHorizontalBetween) or (isVerticalBetween):
+            return True
+        else:
+            return False
+
+    def get_steps_by(self, wire):
+        steps = 0
+        currentPt = Point(0, 0)
+        # logic
+        for cmd in wire:
+            nextPt = currentPt.nextPoint(cmd)
+            between = self.isBetween(currentPt, nextPt)
+            if not between:
+                incr = int(cmd[1:])
+                steps += incr
+            else:
+                incr = self.get_manhatan_distance(currentPt)
+                steps += incr
+                break
+            currentPt = nextPt
+
+        return steps
 
 
 class Line:
@@ -111,7 +146,7 @@ def main():
             sub_lines.append(line)
             currentPt = nextPt
         lines.append(sub_lines)
-    
+
     valid_points = []
 
     for line_0 in lines[0]:
@@ -120,16 +155,26 @@ def main():
             if intersection.isExist():
                 valid_points.append(intersection)
 
-    print('Number of cut points: {}'.format(len(valid_points))) # expect 49
+    print('Number of cut points: {}'.format(len(valid_points)))  # expect 49
 
-    min_distance = 1000000 # abitrary big number
+    min_distance = 1000000  # abitrary big number
     for p in valid_points:
         distance = p.get_manhatan_distance_from_central()
-        print('====distance {}, x {}, y {}'.format(distance, p.x, p.y))
         if distance != 0 and distance < min_distance:
             min_distance = distance
-    
-    print('Distance to closest point: {}'.format(min_distance)) # expect 860
+
+    print('Distance to closest point: {}'.format(min_distance))  # expect 860
+
+    # Part 2
+    fewest_step = 1000000  # abitrary big number
+    for p in valid_points:
+        steps_0 = p.get_steps_by(wires[0])
+        steps_1 = p.get_steps_by(wires[1])
+        total = steps_0 + steps_1
+        if total <= fewest_step:
+            fewest_step = total
+
+    print('The fewest combined steps: {}'.format(fewest_step))  # expect 9238
 
 
 if __name__ == "__main__":
