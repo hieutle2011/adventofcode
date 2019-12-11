@@ -46,13 +46,13 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(valid, True)
 
     def test_valid_number(self):
-        num = 111123  # double 11, never decreases
+        num = 112233  # double 11, never decreases
         valid = isValidNumber(num)
         self.assertEqual(valid, True)
 
-        num = 111111  # double 11, never decreases
-        valid = isValidNumber(num)
-        self.assertEqual(valid, True)
+        # num = 111111  # double 11, never decreases
+        # valid = isValidNumber(num)
+        # self.assertEqual(valid, False)
 
     def test_invalid_number(self):
         num = 223450  # decreasing pair of 50
@@ -60,6 +60,10 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(valid, False)
 
         num = 123789  # no double
+        valid = isValidNumber(num)
+        self.assertEqual(valid, False)
+
+        num = 123444  # the repeated 44 is part of a larger group of 444
         valid = isValidNumber(num)
         self.assertEqual(valid, False)
 
