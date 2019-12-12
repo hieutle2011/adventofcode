@@ -42,17 +42,21 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(valid, False)
 
     def test_valid_digit_number(self):
-        valid = isValidNumber(113456)
-        self.assertEqual(valid, True)
-
-    def test_valid_number(self):
-        num = 112233  # double 11, never decreases
+        num = 113456  # double 1s
         valid = isValidNumber(num)
         self.assertEqual(valid, True)
 
-        # num = 111111  # double 11, never decreases
-        # valid = isValidNumber(num)
-        # self.assertEqual(valid, False)
+        # the digits never decrease and all repeated digits are exactly
+        # two digits long.
+        num = 112233
+        valid = isValidNumber(num)
+        self.assertEqual(valid, True)
+
+        # meets the criteria (even though 1 is repeated more than twice
+        # it still contains a double 22)
+        num = 111122
+        valid = isValidNumber(num)
+        self.assertEqual(valid, True)
 
     def test_invalid_number(self):
         num = 223450  # decreasing pair of 50
@@ -64,6 +68,10 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(valid, False)
 
         num = 123444  # the repeated 44 is part of a larger group of 444
+        valid = isValidNumber(num)
+        self.assertEqual(valid, False)
+
+        num = 178477  # decreasing pair of 84
         valid = isValidNumber(num)
         self.assertEqual(valid, False)
 

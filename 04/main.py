@@ -18,6 +18,7 @@ def isValidNumber(number):
 
     isValid = True
     isDouble = False
+    shouldCheckTriple = True
 
     for i in range(length-1, 0, -1):
         num1, num2 = strnum[i-1], strnum[i]
@@ -25,17 +26,20 @@ def isValidNumber(number):
         isValid = isValid and adj.isValid()
         isDouble = isDouble or adj.isDouble()
 
-        # if isValid and isDouble and i-2>0:
-        #     num0 = strnum[i-2]
-        #     adj0 = Adjacent(num0, num1)
-        #     check = adj0.isDouble()
-        #     if not check:
-        #         break
-        #     else:
-        #         isValid = False
+        if not isValid:
+            return False
+        elif shouldCheckTriple and adj.isDouble() and i-2 >= 0:
+            num0 = strnum[i-2]
+            adj0 = Adjacent(num0, num1)
+            isTriple = adj0.isDouble()
+            if isTriple:
+                return False
+            else:
+                shouldCheckTriple = False
+        else:
+            pass
 
     valid = isValid and isDouble
-
     return valid
 
 
