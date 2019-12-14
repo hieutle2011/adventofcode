@@ -1,92 +1,135 @@
 import os
-import copy
 
 
 def parseInputFile(path):
     file = open(path)
     for line in file:
-        return [int(i) for i in line.split(',')]
+        return line.split(',')
 
 
-def handleIO():
-    pass
+def makeOpCode(strCode, length=4):
+    lenCode = len(strCode)
+    if lenCode < length:
+        return '0' * (length-lenCode) + strCode
+    else:
+        return strCode
 
 
-def handleOperation(opCode, opCodeIndex, progCodes):
-    # param opCode: string '1002'
-    # param opCodeIndex: int
-    # param progCodes: list
-    
-    # CBADE
-    #  1002,4,3,4
+def handleInput(input, opCodeIndex, progCodes):
+    indexParam = opCodeIndex+1
+    ptrParam = int(progCodes[indexParam])
+    progCodes[ptrParam] = input
+
+
+def handleOutput(opCodeIndex, progCodes):
+    indexParam = opCodeIndex+1
+    ptrParam = int(progCodes[indexParam])
+    output = progCodes[ptrParam]
+    return output
+
+
+def handleParamOperation(fullCode, opCodeIndex, progCodes):
+
     indexA = opCodeIndex+1
     indexB = opCodeIndex+2
     indexResult = opCodeIndex+3
-    ptrA = progCodes[indexA]
-    ptrB = progCodes[indexB]
-    ptrResult = progCodes[indexResult]
+    ptrA = int(progCodes[indexA])
+    ptrB = int(progCodes[indexB])
+    ptrResult = int(progCodes[indexResult])
 
-    de = int(opCode[-2:]) # opcode: 1 or 2
-    a_mode, b_mode, c_mode = int(opCode[-3]), int(opCode[-4]), POSITION_MODE
-    # a, b, c = progCodes[indexA], progCodes[indexB], progCodes[indexResult]
-    
+    opCode = fullCode[-2:]  # opcode: 1 or 2
+    a_mode = int(fullCode[-3])
+    b_mode = int(fullCode[-4])
+    c_mode = CONST['mode']['position']
+
     # value of first argument
-    if a_mode == POSITION_MODE:
-        a_val = progCodes[ptrA]
-    elif a_mode == IMMEDIATE_MODE:
+    if a_mode == CONST['mode']['position']:
+        a_val = int(progCodes[ptrA])
+    elif a_mode == CONST['mode']['immediate']:
         a_val = ptrA
 
     # value of second argument
-    if b_mode == POSITION_MODE:
-        b_val = progCodes[ptrB]
-    elif b_mode == IMMEDIATE_MODE:
+    if b_mode == CONST['mode']['position']:
+        b_val = int(progCodes[ptrB])
+    elif b_mode == CONST['mode']['immediate']:
         b_val = ptrB
 
     # where to write result to
-    if c_mode == POSITION_MODE: # always true
-        if de == PLUS_CODE:
+    if c_mode == CONST['mode']['position']:  # always true
+        if opCode == CONST['plus']['code']:
             progCodes[ptrResult] = a_val + b_val
-        elif de == MULTIPLY_CODE:
+        elif opCode == CONST['mult']['code']:
             progCodes[ptrResult] = a_val * b_val
         return progCodes
 
 
-PLUS_CODE = 1
-MULTIPLY_CODE = 2
-HALT_CODE = 99
+# def process(input, index, progCodes):
 
-POSITION_MODE = 0
-IMMEDIATE_MODE = 1
+
+CONST = {
+    'plus': {
+        'code': '01',
+        'len': 4,
+    },
+    'mult': {
+        'code': '02',
+        'len': 4,
+    },
+    'input': {
+        'code': '03',
+        'len': 2,
+    },
+    'output': {
+        'code': '04',
+        'len': 2,
+    },
+    'halt': {
+        'code': '99',
+    },
+    'mode': {
+        'position': 0,
+        'immediate': 1,
+    }
+}
 
 
 def main():
     path = os.getcwd() + '/input.txt'
-    program_codes = parseInputFile(path)
-    EXPECT = 19690720
+    progCodes = parseInputFile(path)
+    length = len(progCodes)
+    input = 1
+    outputs = []
 
-    # for noun in range(0, 100):
-    #     for verb in range(0, 100):
-    #         # reload program codes into memory
-    #         memory = copy.deepcopy(program_codes)
+    index = 0
+    while index < length:
+        data = str(progCodes[index])
+        fullcode = makeOpCode(data)
+        opCode = fullcode[-2:]
 
-    #         # restore the gravity assist program
-    #         memory[1] = noun
-    #         memory[2] = verb
+        if opCode == CONST['halt']['code']:
+            break
 
-    #         opCodeIndexes = getOpCodeIndex(len(memory))
-    #         for index in opCodeIndexes:
-    #             opCode = memory[index]
-    #             if opCode == HALT_CODE:
-    #                 break
-    #             elif opCode == PLUS_CODE or opCode == MULTIPLY_CODE:
-    #                 memory = handleOperation(opCode, index, memory)
-    #             else:
-    #                 pass
+        elif opCode == CONST['input']['code']:
+            handleInput(input, index, progCodes)
+            index += CONST['input']['len']
 
-    #         if memory[0] == EXPECT:
-    #             print(noun, verb)
-    #             print(memory[0])
-    #             exit() # stop program immedietly
+        elif opCode == CONST['output']['code']:
+            output = handleOutput(index, progCodes)
+            outputs.append(output)
+            index += CONST['output']['len']
+
+        elif opCode == CONST['plus']['code']:
+            progCodes = handleParamOperation(
+                fullcode, index, progCodes)
+            index += CONST['plus']['len']
+
+        elif opCode == CONST['mult']['code']:
+            progCodes = handleParamOperation(
+                fullcode, index, progCodes)
+            index += CONST['mult']['len']
+
+    print(len(outputs))
+    print(outputs[-1])  # 11933517
 
 
 if __name__ == "__main__":
