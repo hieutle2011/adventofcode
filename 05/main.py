@@ -54,16 +54,33 @@ def handleParamOperation(fullCode, opCodeIndex, progCodes):
     elif b_mode == CONST['mode']['immediate']:
         b_val = ptrB
 
+    inst_pointer = 0
     # where to write result to
     if c_mode == CONST['mode']['position']:  # always true
         if opCode == CONST['plus']['code']:
             progCodes[ptrResult] = a_val + b_val
         elif opCode == CONST['mult']['code']:
             progCodes[ptrResult] = a_val * b_val
-        return progCodes
+        elif opCode == CONST['jit']['code']:
+            if a_val != 0:
+                inst_pointer = b_val
+            pass
+        elif opCode == CONST['jif']['code']:
+            if a_val == 0:
+                inst_pointer = b_val
+            pass
+        elif opCode == CONST['lt']['code']:
+            if a_val < b_val:
+                progCodes[ptrResult] = 1
+            else:
+                progCodes[ptrResult] = 0
+        elif opCode == CONST['eq']['code']:
+            if a_val == b_val:
+                progCodes[ptrResult] = 1
+            else:
+                progCodes[ptrResult] = 0
 
-
-# def process(input, index, progCodes):
+    return progCodes, inst_pointer
 
 
 CONST = {
@@ -83,6 +100,22 @@ CONST = {
         'code': '04',
         'len': 2,
     },
+    'jit': {
+        'code': '05',
+        'len': 3,
+    },
+    'jif': {
+        'code': '06',
+        'len': 3,
+    },
+    'lt': {
+        'code': '07',
+        'len': 4,
+    },
+    'eq': {
+        'code': '08',
+        'len': 4,
+    },
     'halt': {
         'code': '99',
     },
@@ -100,33 +133,65 @@ def main():
     input = 1
     outputs = []
 
-    index = 0
-    while index < length:
-        data = str(progCodes[index])
-        fullcode = makeOpCode(data)
+    ins_pointer = 0
+    while ins_pointer < length:
+        instruction = str(progCodes[ins_pointer])
+        fullcode = makeOpCode(instruction)
         opCode = fullcode[-2:]
 
         if opCode == CONST['halt']['code']:
             break
 
+        # IO operation
         elif opCode == CONST['input']['code']:
-            handleInput(input, index, progCodes)
-            index += CONST['input']['len']
+            handleInput(input, ins_pointer, progCodes)
+            ins_pointer += CONST['input']['len']
 
         elif opCode == CONST['output']['code']:
-            output = handleOutput(index, progCodes)
-            outputs.append(output)
-            index += CONST['output']['len']
+            output = handleOutput(ins_pointer, progCodes)
+            ins_pointer += CONST['output']['len']
 
+            # Store output
+            outputs.append(output)
+
+        # Calculation operation
         elif opCode == CONST['plus']['code']:
-            progCodes = handleParamOperation(
-                fullcode, index, progCodes)
-            index += CONST['plus']['len']
+            progCodes, _ = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            ins_pointer += CONST['plus']['len']
 
         elif opCode == CONST['mult']['code']:
-            progCodes = handleParamOperation(
-                fullcode, index, progCodes)
-            index += CONST['mult']['len']
+            progCodes, _ = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            ins_pointer += CONST['mult']['len']
+
+        # Modify ins pointer operation
+        elif opCode == CONST['jit']['code']:
+            progCodes, new_pointer = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            if new_pointer != 0:
+                ins_pointer = new_pointer
+            else:
+                ins_pointer += CONST['jit']['len']
+
+        elif opCode == CONST['jif']['code']:
+            progCodes, new_pointer = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            if new_pointer != 0:
+                ins_pointer = new_pointer
+            else:
+                ins_pointer += CONST['jif']['len']
+
+        # Comparision operation
+        elif opCode == CONST['lt']['code']:
+            progCodes, _ = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            ins_pointer += CONST['lt']['len']
+
+        elif opCode == CONST['eq']['code']:
+            progCodes, _ = handleParamOperation(
+                fullcode, ins_pointer, progCodes)
+            ins_pointer += CONST['eq']['len']
 
     print(len(outputs))
     print(outputs[-1])  # 11933517
