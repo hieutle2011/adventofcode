@@ -1,6 +1,49 @@
 import os
 
 
+class Planet:
+    def __init__(self, central):
+        self.central = central
+        self.total = 0
+
+    def count(self):
+        curPlanet = self.central
+        while curPlanet is not None:
+            self.total += 1
+            curPlanet = curPlanet.central
+
+
+def makeMap(arr):
+    newMap = {}
+    for i in range(len(arr)):
+        items = arr[i].split(')')
+        central = items[0]
+        orbitObj = items[1]
+        newMap[orbitObj] = central
+    return newMap
+
+
+def parseMap(inMap):
+    count = 0
+    outMap = {}
+    for k, v in inMap.items():
+        total = 1
+        central = v
+        while central != 'COM':
+            total += 1
+            central = inMap[central]
+
+        direct = v
+
+        innerMap = {
+            'direct': direct,
+            'total': total
+        }
+        outMap[k] = innerMap
+        count += total
+    return outMap, count
+
+
 def parseInputFile(path):
     arr = []
     file = open(path)
@@ -12,43 +55,13 @@ def parseInputFile(path):
 
 
 def main():
-    path = os.getcwd() + '/06/input0.txt'
+    path = os.getcwd() + '/input1.txt'
     arr = parseInputFile(path)
 
-    orbitMap = {
-        'COM': {
-            'direct': None,
-            'indirect': -1,
-            'total': None
-        }
-    }
+    myMap = makeMap(arr)
+    _, count = parseMap(myMap)
 
-    restart = True
-
-    initial = 'COM'
-    while restart:
-        for i in range(len(arr)):
-
-            if arr[i].startswith(initial):
-                items = arr[i].split(')')
-                central = items[0]
-                orbitObj = items[1]
-                indirect = orbitMap[central]['indirect'] + 1
-                data = {
-                    'direct': central,
-                    'indirect': indirect,
-                    'total': indirect + 1
-                }
-                orbitMap[orbitObj] = data
-                del arr[i]
-                initial = orbitObj
-                if len(arr[i]) == 0:
-                    restart == False
-                break
-            else:
-                print('else')
-                pass
-    print(len(orbitMap))
+    print(count)  # 142915
 
 
 if __name__ == "__main__":
