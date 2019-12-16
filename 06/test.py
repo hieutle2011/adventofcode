@@ -1,6 +1,6 @@
 import unittest
 import os
-from main import Planet, makeMap, parseInputFile, parseMap
+from main import Planet, makeMap, parseInputFile, parseMap, travel, moveCount
 
 
 class TestPlanetMethods(unittest.TestCase):
@@ -87,3 +87,71 @@ class TestParseMap(unittest.TestCase):
 
         self.assertEqual(len(newMap), 1013)
         self.assertEqual(count, 142915)
+
+
+class TestTravel(unittest.TestCase):
+    def test_travel(self):
+        you = 'YOU'
+        san = 'SAN'
+
+        path = os.getcwd() + '/input2.txt'
+        arr = parseInputFile(path)
+        myMap = makeMap(arr)
+        newMap, _ = parseMap(myMap)
+
+        yours = newMap[you]['direct']
+        sans = newMap[san]['direct']
+
+        self.assertEqual(yours, 'K')
+        self.assertEqual(sans, 'I')
+
+        your_arr = travel(yours, newMap)
+        self.assertEqual(your_arr, ['J', 'E', 'D', 'C', 'B', 'COM'])
+
+        sans_arr = travel(sans, newMap)
+        self.assertEqual(sans_arr, ['D', 'C', 'B', 'COM'])
+
+
+class TestMove(unittest.TestCase):
+    def test_move(self):
+        arr1 = ['J', 'E', 'D', 'C', 'B', 'COM']
+        arr2 = ['D', 'C', 'B', 'COM']
+
+        move = moveCount(arr1, arr2)
+        self.assertEqual(move, 4)
+
+    def test_move_02(self):
+        you = 'YOU'
+        san = 'SAN'
+        path = os.getcwd() + '/input2.txt'
+        arr = parseInputFile(path)
+        myMap = makeMap(arr)
+        newMap, _ = parseMap(myMap)
+
+        yours = newMap[you]['direct']
+        sans = newMap[san]['direct']
+
+        your_arr = travel(yours, newMap)
+        sans_arr = travel(sans, newMap)
+
+        move = moveCount(your_arr, sans_arr)
+        self.assertEqual(move, 4)
+
+    def test_move_01(self):
+        you = 'YOU'
+        san = 'SAN'
+        path = os.getcwd() + '/input1.txt'
+        arr = parseInputFile(path)
+        myMap = makeMap(arr)
+        newMap, _ = parseMap(myMap)
+
+        self.assertEqual(len(newMap), 1013)
+
+        yours = newMap[you]['direct']
+        sans = newMap[san]['direct']
+
+        your_arr = travel(yours, newMap)
+        sans_arr = travel(sans, newMap)
+
+        move = moveCount(your_arr, sans_arr)
+        self.assertEqual(move, 211)

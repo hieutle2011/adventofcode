@@ -44,6 +44,30 @@ def parseMap(inMap):
     return outMap, count
 
 
+def travel(k, myMap):
+    arr = []
+    current = k
+    com = 'COM'
+    while current != com:
+        direct = myMap[current]['direct']
+        arr.append(direct)
+        current = direct
+    return arr
+
+
+def moveCount(arr1, arr2):
+    set1 = set(arr1)
+    set2 = set(arr2)
+
+    if len(arr1) > len(arr2):
+        result = set1 - set2
+    else:
+        result = set2 - set1
+
+    length = len(result)
+    return length + 2
+
+
 def parseInputFile(path):
     arr = []
     file = open(path)
@@ -59,9 +83,20 @@ def main():
     arr = parseInputFile(path)
 
     myMap = makeMap(arr)
-    _, count = parseMap(myMap)
+    newMap, count = parseMap(myMap)
 
     print(count)  # 142915
+
+    you = 'YOU'
+    san = 'SAN'
+    yours = newMap[you]['direct']
+    sans = newMap[san]['direct']
+
+    your_arr = travel(yours, newMap)
+    sans_arr = travel(sans, newMap)
+
+    move = moveCount(your_arr, sans_arr)
+    print(move)
 
 
 if __name__ == "__main__":
