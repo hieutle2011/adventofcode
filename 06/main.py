@@ -1,18 +1,6 @@
 import os
 
 
-class Planet:
-    def __init__(self, central):
-        self.central = central
-        self.total = 0
-
-    def count(self):
-        curPlanet = self.central
-        while curPlanet is not None:
-            self.total += 1
-            curPlanet = curPlanet.central
-
-
 def makeMap(arr):
     newMap = {}
     for i in range(len(arr)):

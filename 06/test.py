@@ -1,27 +1,6 @@
 import unittest
 import os
-from main import Planet, makeMap, parseInputFile, parseMap, travel, moveCount
-
-
-class TestPlanetMethods(unittest.TestCase):
-    def test_init(self):
-        com = Planet(None)
-        self.assertEqual(com.central, None)
-        self.assertEqual(com.total, 0)
-
-        b_planet = Planet(com)
-        self.assertEqual(b_planet.central, com)
-        self.assertEqual(b_planet.total, 0)
-
-        b_planet.count()
-        self.assertEqual(b_planet.total, 1)
-
-        c_planet = Planet(b_planet)
-        self.assertEqual(c_planet.central, b_planet)
-        self.assertEqual(c_planet.total, 0)
-
-        c_planet.count()
-        self.assertEqual(c_planet.total, 2)
+from main import makeMap, parseInputFile, parseMap, travel, moveCount
 
 
 class TestMakeMap(unittest.TestCase):
