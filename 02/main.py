@@ -60,7 +60,7 @@ def main():
             if memory[0] == EXPECT:
                 print(noun, verb)
                 print(memory[0])
-                exit() # stop program immedietly
+                exit()  # stop program immedietly
 
 
 if __name__ == "__main__":

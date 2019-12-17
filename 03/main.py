@@ -21,7 +21,7 @@ class Point:
         return abs(self.x) + abs(self.y)
 
     def isExist(self):
-        if self.x == None or self.y == None:
+        if self.x is None or self.y is None:
             return False
         else:
             return True
@@ -42,11 +42,12 @@ class Point:
         return Point(self.x + x, self.y + y)
 
     def isBetween(self, pointA, pointB):
-        isHorizontalBetween = (self.y == pointA.y and self.y == pointB.y) and in_range(
-            self.x, pointA.x, pointB.x)
-        isVerticalBetween = (self.x == pointA.x and self.x == pointB.x) and in_range(
-            self.y, pointA.y, pointB.y)
-        if (isHorizontalBetween) or (isVerticalBetween):
+        isHorBetween = ((self.y == pointA.y and self.y == pointB.y)
+                        and in_range(self.x, pointA.x, pointB.x))
+        isVertBetween = ((self.x == pointA.x and self.x == pointB.x)
+                         and in_range(self.y, pointA.y, pointB.y))
+        
+        if (isHorBetween) or (isVertBetween):
             return True
         else:
             return False
@@ -110,11 +111,21 @@ class Line:
 
         if self.direction != line.direction:
             if self.direction == 'VERTICAL':
-                if self.min_x >= line.min_x and self.min_x <= line.max_x and line.min_y >= self.min_y and line.min_y <= self.max_y:
+                if (
+                    self.min_x >= line.min_x
+                    and self.min_x <= line.max_x
+                    and line.min_y >= self.min_y
+                    and line.min_y <= self.max_y
+                ):
                     xP = self.min_x
                     yP = line.min_y
             elif self.direction == 'HORIZONTAL':
-                if line.min_x >= self.min_x and line.min_x <= self.max_x and self.min_y >= line.min_y and self.min_y <= line.max_y:
+                if (
+                    line.min_x >= self.min_x
+                    and line.min_x <= self.max_x
+                    and self.min_y >= line.min_y
+                    and self.min_y <= line.max_y
+                ):
                     xP = line.min_x
                     yP = self.min_y
 

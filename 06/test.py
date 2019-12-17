@@ -82,7 +82,7 @@ class TestTravel(unittest.TestCase):
         self.assertEqual(your_arr, ['K', 'J', 'E', 'D', 'C', 'B', 'COM'])
 
         sans_arr = travel(san, newMap)
-        self.assertEqual(sans_arr, ['I','D', 'C', 'B', 'COM'])
+        self.assertEqual(sans_arr, ['I', 'D', 'C', 'B', 'COM'])
 
 
 class TestMove(unittest.TestCase):
@@ -122,7 +122,6 @@ class TestMove(unittest.TestCase):
 
         move = moveCount(your_arr, sans_arr)
         self.assertEqual(move, 283)
-
 
 
 class TestSet(unittest.TestCase):
