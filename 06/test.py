@@ -32,12 +32,12 @@ class TestMakeMap(unittest.TestCase):
         isB = 'B' in myMap
         self.assertEqual(isB, True)
 
-        path = os.getcwd() + '/input0.txt'
+        path = os.getcwd() + '/input1.txt'
         arr = parseInputFile(path)
         myMap = makeMap(arr)
         self.assertEqual(len(myMap), 11)
 
-        path = os.getcwd() + '/input1.txt'
+        path = os.getcwd() + '/input0.txt'
         arr = parseInputFile(path)
         myMap = makeMap(arr)
         self.assertEqual(len(myMap), 1013)
@@ -70,7 +70,7 @@ class TestParseMap(unittest.TestCase):
         self.assertEqual(count, 3)
 
     def test_parse_map_input0(self):
-        path = os.getcwd() + '/input0.txt'
+        path = os.getcwd() + '/input1.txt'
         arr = parseInputFile(path)
         myMap = makeMap(arr)
         newMap, count = parseMap(myMap)
@@ -80,7 +80,7 @@ class TestParseMap(unittest.TestCase):
         self.assertEqual(newMap['H']['total'], 3)
 
     def test_parse_map_input1(self):
-        path = os.getcwd() + '/input1.txt'
+        path = os.getcwd() + '/input0.txt'
         arr = parseInputFile(path)
         myMap = makeMap(arr)
         newMap, count = parseMap(myMap)
@@ -99,23 +99,17 @@ class TestTravel(unittest.TestCase):
         myMap = makeMap(arr)
         newMap, _ = parseMap(myMap)
 
-        yours = newMap[you]['direct']
-        sans = newMap[san]['direct']
+        your_arr = travel(you, newMap)
+        self.assertEqual(your_arr, ['K', 'J', 'E', 'D', 'C', 'B', 'COM'])
 
-        self.assertEqual(yours, 'K')
-        self.assertEqual(sans, 'I')
-
-        your_arr = travel(yours, newMap)
-        self.assertEqual(your_arr, ['J', 'E', 'D', 'C', 'B', 'COM'])
-
-        sans_arr = travel(sans, newMap)
-        self.assertEqual(sans_arr, ['D', 'C', 'B', 'COM'])
+        sans_arr = travel(san, newMap)
+        self.assertEqual(sans_arr, ['I','D', 'C', 'B', 'COM'])
 
 
 class TestMove(unittest.TestCase):
     def test_move(self):
-        arr1 = ['J', 'E', 'D', 'C', 'B', 'COM']
-        arr2 = ['D', 'C', 'B', 'COM']
+        arr1 = ['K', 'J', 'E', 'D', 'C', 'B', 'COM']
+        arr2 = ['I', 'D', 'C', 'B', 'COM']
 
         move = moveCount(arr1, arr2)
         self.assertEqual(move, 4)
@@ -128,11 +122,8 @@ class TestMove(unittest.TestCase):
         myMap = makeMap(arr)
         newMap, _ = parseMap(myMap)
 
-        yours = newMap[you]['direct']
-        sans = newMap[san]['direct']
-
-        your_arr = travel(yours, newMap)
-        sans_arr = travel(sans, newMap)
+        your_arr = travel(you, newMap)
+        sans_arr = travel(san, newMap)
 
         move = moveCount(your_arr, sans_arr)
         self.assertEqual(move, 4)
@@ -140,18 +131,28 @@ class TestMove(unittest.TestCase):
     def test_move_01(self):
         you = 'YOU'
         san = 'SAN'
-        path = os.getcwd() + '/input1.txt'
+        path = os.getcwd() + '/input0.txt'
         arr = parseInputFile(path)
         myMap = makeMap(arr)
         newMap, _ = parseMap(myMap)
 
         self.assertEqual(len(newMap), 1013)
 
-        yours = newMap[you]['direct']
-        sans = newMap[san]['direct']
-
-        your_arr = travel(yours, newMap)
-        sans_arr = travel(sans, newMap)
+        your_arr = travel(you, newMap)
+        sans_arr = travel(san, newMap)
 
         move = moveCount(your_arr, sans_arr)
-        self.assertEqual(move, 211)
+        self.assertEqual(move, 283)
+
+
+
+class TestSet(unittest.TestCase):
+    def test_set(self):
+        arr1 = ['a', 'b', 'c']
+        arr2 = ['a', 'b', 'c', 'd']
+
+        s1 = set(arr1)
+        s2 = set(arr2)
+
+        diff = s1 ^ s2
+        self.assertEqual(diff, {'d'})

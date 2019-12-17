@@ -5,5 +5,9 @@
 ```
 cd 01/
 
-python main.py
+python3 main.py
+
+# run test
+
+python3 -m unittest test.py
 ```

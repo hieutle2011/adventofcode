@@ -59,13 +59,8 @@ def moveCount(arr1, arr2):
     set1 = set(arr1)
     set2 = set(arr2)
 
-    if len(arr1) > len(arr2):
-        result = set1 - set2
-    else:
-        result = set2 - set1
-
-    length = len(result)
-    return length + 2
+    result = set1 ^ set2
+    return len(result)
 
 
 def parseInputFile(path):
@@ -79,7 +74,7 @@ def parseInputFile(path):
 
 
 def main():
-    path = os.getcwd() + '/input1.txt'
+    path = os.getcwd() + '/input0.txt'
     arr = parseInputFile(path)
 
     myMap = makeMap(arr)
@@ -89,14 +84,12 @@ def main():
 
     you = 'YOU'
     san = 'SAN'
-    yours = newMap[you]['direct']
-    sans = newMap[san]['direct']
 
-    your_arr = travel(yours, newMap)
-    sans_arr = travel(sans, newMap)
+    your_arr = travel(you, newMap)
+    sans_arr = travel(san, newMap)
 
     move = moveCount(your_arr, sans_arr)
-    print(move)
+    print(move)  # 283
 
 
 if __name__ == "__main__":
