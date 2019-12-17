@@ -126,11 +126,12 @@ CONST = {
 }
 
 
-def main():
-    path = os.getcwd() + '/input.txt'
+def processIntcode(path, input):
+    """Take the path of the software program, and the input value.
+    Return the list of outputs generated from the Intcode computer
+    """
     progCodes = parseInputFile(path)
     length = len(progCodes)
-    input = 1
     outputs = []
 
     ins_pointer = 0
@@ -193,6 +194,14 @@ def main():
                 fullcode, ins_pointer, progCodes)
             ins_pointer += CONST['eq']['len']
 
+    return outputs
+
+
+def main():
+    software = '/diagnostic-program.txt'
+    software_path = os.getcwd() + software
+    input_instruction = 1
+    outputs = processIntcode(software_path, input_instruction)
     print(len(outputs))
     print(outputs[-1])  # 11933517
 
