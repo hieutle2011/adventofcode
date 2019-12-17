@@ -1,13 +1,13 @@
 # My adventofcode work
 
-### Day 1
+### Get started
+
+Change directory to project folder, then run below commands.
 
 ```
-cd 01/
-
 python3 main.py
 
-# run test
+# run test (if applicable)
 
 python3 -m unittest test.py
 ```
