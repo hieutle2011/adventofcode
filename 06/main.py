@@ -1,29 +1,33 @@
 import os
 
 
-def makeMap(arr):
-    newMap = {}
+def makeMap(arr: list) -> map:
+    """Make a new map from list of code"""
+    newMap: map = {}
     for i in range(len(arr)):
-        items = arr[i].split(')')
-        central = items[0]
-        orbitObj = items[1]
+        items: list = arr[i].split(')')
+        central: str = items[0]
+        orbitObj: str = items[1]
         newMap[orbitObj] = central
     return newMap
 
 
-def parseMap(inMap):
-    count = 0
-    outMap = {}
+def parseMap(inMap: map) -> (map, int):
+    """Return new map and the number of all direct and indirect steps
+    within map
+    """
+    count: int = 0
+    outMap: map = {}
     for k, v in inMap.items():
-        total = 1
-        central = v
+        total: int = 1
+        central: str = v
         while central != 'COM':
             total += 1
             central = inMap[central]
 
-        direct = v
+        direct: str = v
 
-        innerMap = {
+        innerMap: map = {
             'direct': direct,
             'total': total
         }
@@ -32,7 +36,8 @@ def parseMap(inMap):
     return outMap, count
 
 
-def travel(k, myMap):
+def travel(k: str, myMap: map) -> list:
+    """Return list of objects between the object k and the object 'COM'"""
     arr = []
     current = k
     com = 'COM'
@@ -43,7 +48,8 @@ def travel(k, myMap):
     return arr
 
 
-def moveCount(arr1, arr2):
+def moveCount(arr1: list, arr2: list) -> int:
+    """Number of moves calculated as full outer join of 2 list"""
     set1 = set(arr1)
     set2 = set(arr2)
 
@@ -51,7 +57,7 @@ def moveCount(arr1, arr2):
     return len(result)
 
 
-def parseInputFile(path):
+def parseInputFile(path: str) -> list:
     arr = []
     file = open(path)
     for line in file:
