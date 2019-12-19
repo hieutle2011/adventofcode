@@ -126,15 +126,16 @@ CONST = {
 }
 
 
-def processIntcode(path, input):
-    """Take the path of the software program, and the input value.
+def processIntcode(path: str, inputs: list) -> list:
+    """Take the path of the software program, and the array input values.
     Return the list of outputs generated from the Intcode computer
     """
     progCodes = parseInputFile(path)
     length = len(progCodes)
     outputs = []
-
+    in_index = 0
     ins_pointer = 0
+
     while ins_pointer < length:
         instruction = str(progCodes[ins_pointer])
         fullcode = makeOpCode(instruction)
@@ -145,8 +146,11 @@ def processIntcode(path, input):
 
         # IO operation
         elif opCode == CONST['input']['code']:
-            handleInput(input, ins_pointer, progCodes)
+            
+            this_input = inputs[in_index]
+            handleInput(this_input, ins_pointer, progCodes)
             ins_pointer += CONST['input']['len']
+            in_index += 1
 
         elif opCode == CONST['output']['code']:
             output = handleOutput(ins_pointer, progCodes)
@@ -198,9 +202,10 @@ def processIntcode(path, input):
 
 
 def main():
-    software = '/diagnostic-program.txt'
+    software = '/adv05/diagnostic-program.txt'
     software_path = os.getcwd() + software
-    input_instruction = 1
+    # software_path = '/home/hieu/dev/adventofcode/adv07/example_1.txt'
+    input_instruction = [0]
     outputs = processIntcode(software_path, input_instruction)
     print(len(outputs))
     print(outputs[-1])  # 11933517
