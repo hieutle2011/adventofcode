@@ -21,10 +21,15 @@ def handleInput(input, opCodeIndex, progCodes):
     progCodes[ptrParam] = input
 
 
-def handleOutput(opCodeIndex, progCodes):
+def handleOutput(fullCode, opCodeIndex, progCodes):
     indexParam = opCodeIndex+1
+    a_mode = int(fullCode[-3])
     ptrParam = int(progCodes[indexParam])
-    output = progCodes[ptrParam]
+
+    if a_mode == CONST['mode']['position']:
+        output = progCodes[ptrParam]
+    elif a_mode == CONST['mode']['immediate']:
+        output = ptrParam
     return output
 
 
@@ -146,14 +151,15 @@ def processIntcode(path: str, inputs: list) -> list:
 
         # IO operation
         elif opCode == CONST['input']['code']:
-            
+
             this_input = inputs[in_index]
             handleInput(this_input, ins_pointer, progCodes)
             ins_pointer += CONST['input']['len']
             in_index += 1
 
         elif opCode == CONST['output']['code']:
-            output = handleOutput(ins_pointer, progCodes)
+            output = handleOutput(
+                fullcode, ins_pointer, progCodes)
             ins_pointer += CONST['output']['len']
 
             # Store output
@@ -198,17 +204,21 @@ def processIntcode(path: str, inputs: list) -> list:
                 fullcode, ins_pointer, progCodes)
             ins_pointer += CONST['eq']['len']
 
+        else:
+            print('no such opcode')
+            exit()
+
     return outputs
 
 
 def main():
-    software = '/adv05/diagnostic-program.txt'
+    software = '/diagnostic-program.txt'
     software_path = os.getcwd() + software
     # software_path = '/home/hieu/dev/adventofcode/adv07/example_1.txt'
-    input_instruction = [0]
+    input_instruction = [5]
     outputs = processIntcode(software_path, input_instruction)
     print(len(outputs))
-    print(outputs[-1])  # 11933517
+    print(outputs[-1])  # diagnostic-program => 10428568
 
 
 if __name__ == "__main__":
