@@ -36,16 +36,16 @@ def amply(filename: str, phases: list) -> int:
     return outputs_E[-1]
 
 
-def phase_generator(number: int) -> list:
+def phase_generator(start, end: int) -> list:
     arr = []
-    for i in range(number+1):
+    for i in range(start, end+1):
         arr.append(i)
-    # arr = [0, 1, 2, ... number]
+    # arr = [start, ... , end]
     return list(itertools.permutations(arr))
 
 
 def main():
-    phases = phase_generator(4)
+    phases = phase_generator(0, 4)
     max = 0
     for phase in phases:
         result = amply('/amplifier.txt', phase)

@@ -2,8 +2,9 @@ import os
 
 
 def parseInputFile(path):
-    file = open(path)
+    file = open(path, 'r')
     for line in file:
+        file.close()
         return line.split(',')
 
 
