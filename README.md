@@ -1,20 +1,5 @@
-# My adventofcode work
+# My Advent Of Code work
 
-### Get started
+Years:
 
-- Change directory to project folder, then run below commands.
-
-```
-python3 main.py
-
-# run test (if applicable)
-
-python3 -m unittest test.py
-```
-
-- Check pep8 style
-
-```
-pip3 install pycodestyle
-pycodestyle .
-```
+  - 2019
