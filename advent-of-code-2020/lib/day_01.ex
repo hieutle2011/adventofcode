@@ -1,4 +1,8 @@
 defmodule AOC2020.Day01 do
+  @moduledoc """
+  Module Day 01
+  """
+
   @doc """
   Find two numbers that sum to 2020
   """
