@@ -30,6 +30,9 @@ defmodule AOC2020.Day03 do
     end)
   end
 
+  @doc """
+  While moving until reaching the bottom, count the number of encountered trees along the way.
+  """
   def move_recursive(cur_pos, slope, %{lines: lines} = size, count \\ 0) do
     case move(cur_pos, slope, size) do
       {:ok, pos} ->
@@ -44,6 +47,9 @@ defmodule AOC2020.Day03 do
     end
   end
 
+  @doc """
+  Takes a path to an input file. Returns a map contains the size (height and width) and array of lines of the input file.
+  """
   def get_input_size(path) do
     [line_0 | _] =
       lines =
@@ -58,28 +64,42 @@ defmodule AOC2020.Day03 do
     }
   end
 
+  @doc """
+  Returns a tupple with new position after the move, or current position if the move is invalid
+
+  Take 3 arguments consists of current position, the slope of move, and size of the forest
+  """
   def move(cur_pos, slope, size) do
     if valid_move_down?(cur_pos, slope, size) do
-      {:ok,
-       {
-         move_right(cur_pos, slope, size),
-         move_down(cur_pos, slope)
-       }}
+      {:ok, cur_pos |> move_right(slope, size) |> move_down(slope)}
     else
       {:stop, cur_pos}
     end
   end
 
+  @doc """
+  Checks if moving down is valid (cannot below the height)
+  """
   def valid_move_down?({_, y}, %{d: down}, %{h: height}) do
     y + down < height
   end
 
-  def move_down({_, y}, %{d: down}), do: y + down
+  @doc """
+  Returns the position after moving down
+  """
+  def move_down({x, y}, %{d: down}), do: {x, y + down}
 
-  def move_right({x, _}, %{r: right}, %{w: width}) do
-    if x + right <= width - 1, do: x + right, else: rem(x + right, width - 1) - 1
+  @doc """
+  Returns the position after moving right. Move right can expand forever.
+  """
+  def move_right({x, y}, %{r: right}, %{w: width}) do
+    new_x = if x + right <= width - 1, do: x + right, else: rem(x + right, width - 1) - 1
+    {new_x, y}
   end
 
+  @doc """
+  Checks whether the position in lines is a tree (equal # character).
+  """
   def tree?({x, y}, lines) do
     lines |> Enum.at(y) |> String.codepoints() |> Enum.at(x) == @tree
   end

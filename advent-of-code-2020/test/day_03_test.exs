@@ -44,7 +44,7 @@ defmodule AOC2020.Day03Test do
       slope = %{r: 2}
       size = %{w: 5}
 
-      assert 2 == AOC2020.Day03.move_right(cur_pos, slope, size)
+      assert {2, 0} == AOC2020.Day03.move_right(cur_pos, slope, size)
     end
 
     test "within width next 1" do
@@ -52,7 +52,7 @@ defmodule AOC2020.Day03Test do
       slope = %{r: 2}
       size = %{w: 5}
 
-      assert 4 == AOC2020.Day03.move_right(cur_pos, slope, size)
+      assert {4, 0} == AOC2020.Day03.move_right(cur_pos, slope, size)
     end
 
     test "outside width next 2" do
@@ -60,7 +60,7 @@ defmodule AOC2020.Day03Test do
       slope = %{r: 2}
       size = %{w: 5}
 
-      assert 1 = AOC2020.Day03.move_right(cur_pos, slope, size)
+      assert {1, 0} = AOC2020.Day03.move_right(cur_pos, slope, size)
     end
 
     test "outside width next 2 (edge)" do
@@ -68,7 +68,7 @@ defmodule AOC2020.Day03Test do
       slope = %{r: 2}
       size = %{w: 6}
 
-      assert 0 = AOC2020.Day03.move_right(cur_pos, slope, size)
+      assert {0, 0} = AOC2020.Day03.move_right(cur_pos, slope, size)
     end
 
     test "input situation" do
@@ -76,7 +76,7 @@ defmodule AOC2020.Day03Test do
       slope = %{r: 3}
       size = %{w: 31}
 
-      assert 2 = AOC2020.Day03.move_right(cur_pos, slope, size)
+      assert {2, 0} = AOC2020.Day03.move_right(cur_pos, slope, size)
     end
   end
 
@@ -85,7 +85,7 @@ defmodule AOC2020.Day03Test do
       cur_pos = {0, 0}
       slope = %{d: 2}
 
-      assert 2 == AOC2020.Day03.move_down(cur_pos, slope)
+      assert {0, 2} == AOC2020.Day03.move_down(cur_pos, slope)
     end
   end
 
